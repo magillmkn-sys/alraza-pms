@@ -569,11 +569,17 @@ class PharmacyApp {
 
     document.getElementById('substitute-formula-name').innerText = med.formula;
     
-    const subs = this.inventory.filter(m => m.formula.toLowerCase().trim() === med.formula.toLowerCase().trim() && m.medicineId !== medId);
     const tbody = document.getElementById('substitute-list-tbody');
     let html = '';
+    const shownBrandNames = new Set();
 
-    subs.forEach(s => {
+    // 1. List matching brands from our actual inventory first
+    const inventoryMatches = this.inventory.filter(
+      m => m.formula.toLowerCase().trim() === med.formula.toLowerCase().trim()
+    );
+
+    inventoryMatches.forEach(s => {
+      shownBrandNames.add(s.name.toLowerCase().trim());
       const stock = s.batches.reduce((sum, b) => sum + b.quantity, 0);
       const retail = s.pricing ? s.pricing.retailPerTablet : (s.batches.length > 0 ? s.batches[0].retailPrice : 0);
       
@@ -593,13 +599,65 @@ class PharmacyApp {
       `;
     });
 
+    // 2. List matching brands from the master directory that are not in our inventory
+    const dirMatches = (window.PAK_MEDICINE_DIRECTORY || []).filter(
+      d => d.formula.toLowerCase().trim() === med.formula.toLowerCase().trim()
+    );
+
+    dirMatches.forEach(s => {
+      if (!shownBrandNames.has(s.name.toLowerCase().trim())) {
+        shownBrandNames.add(s.name.toLowerCase().trim());
+        
+        // Escape strings for inline JS call safely
+        const escName = s.name.replace(/'/g, "\\'");
+        const escFormula = s.formula.replace(/'/g, "\\'");
+        const escCat = s.category.replace(/'/g, "\\'");
+        const escBrand = s.brand.replace(/'/g, "\\'");
+
+        html += `
+          <tr style="opacity: 0.85; background: rgba(14, 165, 233, 0.02);">
+            <td><strong>${s.name}</strong> <span style="font-size:0.7rem; color:var(--text-muted);">(ڈائریکٹری)</span></td>
+            <td>${s.brand} / ${s.category}</td>
+            <td>Rs ${s.retailPerTablet.toFixed(2)}</td>
+            <td><span class="badge badge-danger">0 Tabs (دستیاب نہیں)</span></td>
+            <td>N/A</td>
+            <td>
+              <button class="btn btn-success" style="padding: 4px 8px; font-size: 0.75rem;" onclick="app.bringToStock('${escName}', '${escFormula}', '${escCat}', '${escBrand}', ${s.stripsPerBox}, ${s.tabletsPerStrip}, ${s.retailPerTablet}, ${s.costPerTablet})">
+                اسٹاک میں لائیں
+              </button>
+            </td>
+          </tr>
+        `;
+      }
+    });
+
     tbody.innerHTML = html || `
       <tr>
-        <td colspan="6" style="text-align: center; color: var(--text-muted);">اس فارمولے کی متبادل کوئی دوسری دوا انوینٹری میں رجسٹرڈ نہیں ہے</td>
+        <td colspan="6" style="text-align: center; color: var(--text-muted);">اس فارمولے کی متبادل کوئی دوسری دوا انوینٹری یا ڈائریکٹری میں موجود نہیں ہے</td>
       </tr>
     `;
 
     this.openModal('modal-substitute');
+  }
+
+  bringToStock(name, formula, category, brand, stripsPerBox, tabletsPerStrip, retailPerTablet, costPerTablet) {
+    this.closeModal('modal-substitute');
+    this.openAddMedicineModal();
+    
+    // Auto populate the edit/new medicine form
+    document.getElementById('med-name').value = name;
+    document.getElementById('med-brand').value = brand;
+    document.getElementById('med-formula').value = formula;
+    document.getElementById('med-category').value = category;
+    
+    document.getElementById('med-strips-box').value = stripsPerBox;
+    document.getElementById('med-tablets-strip').value = tabletsPerStrip;
+    document.getElementById('med-cost-tablet').value = costPerTablet;
+    document.getElementById('med-retail-tablet').value = retailPerTablet;
+    document.getElementById('med-retail-strip').value = (retailPerTablet * tabletsPerStrip).toFixed(2);
+    document.getElementById('med-retail-box').value = (retailPerTablet * tabletsPerStrip * stripsPerBox * 0.9).toFixed(2);
+    
+    this.showToast(`دوا "${name}" کی تفصیلات خودکار طور پر فارم میں بھر دی گئی ہیں۔ بیچ اور سپلائر سیٹ کر کے سیو کریں۔`, 'success');
   }
 
   addToCart(medId) {

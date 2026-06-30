@@ -592,3 +592,212 @@ const db = {
 
 db.init();
 window.PMS_DB = db;
+
+const PAK_MEDICINE_DIRECTORY = [
+  {
+    "name": "Panadol 500mg",
+    "brand": "GSK",
+    "formula": "Paracetamol",
+    "category": "Analgesic",
+    "stripsPerBox": 10,
+    "tabletsPerStrip": 10,
+    "retailPerTablet": 1.50,
+    "retailPerStrip": 15.00,
+    "retailPerBox": 140.00,
+    "costPerTablet": 1.20
+  },
+  {
+    "name": "Calpol 500mg",
+    "brand": "GSK",
+    "formula": "Paracetamol",
+    "category": "Analgesic",
+    "stripsPerBox": 10,
+    "tabletsPerStrip": 10,
+    "retailPerTablet": 1.45,
+    "retailPerStrip": 14.50,
+    "retailPerBox": 135.00,
+    "costPerTablet": 1.15
+  },
+  {
+    "name": "Disprol 500mg",
+    "brand": "Reckitt Benckiser",
+    "formula": "Paracetamol",
+    "category": "Analgesic",
+    "stripsPerBox": 10,
+    "tabletsPerStrip": 10,
+    "retailPerTablet": 1.40,
+    "retailPerStrip": 14.00,
+    "retailPerBox": 130.00,
+    "costPerTablet": 1.10
+  },
+  {
+    "name": "Febrol 500mg",
+    "brand": "Abbott Laboratories",
+    "formula": "Paracetamol",
+    "category": "Analgesic",
+    "stripsPerBox": 10,
+    "tabletsPerStrip": 10,
+    "retailPerTablet": 1.35,
+    "retailPerStrip": 13.50,
+    "retailPerBox": 125.00,
+    "costPerTablet": 1.05
+  },
+  {
+    "name": "Amoxil 250mg",
+    "brand": "GSK",
+    "formula": "Amoxicillin",
+    "category": "Antibiotic",
+    "stripsPerBox": 10,
+    "tabletsPerStrip": 10,
+    "retailPerTablet": 15.00,
+    "retailPerStrip": 150.00,
+    "retailPerBox": 1400.00,
+    "costPerTablet": 12.00
+  },
+  {
+    "name": "Augmentin 375mg",
+    "brand": "GSK",
+    "formula": "Co-amoxiclav",
+    "category": "Antibiotic",
+    "stripsPerBox": 6,
+    "tabletsPerStrip": 6,
+    "retailPerTablet": 30.00,
+    "retailPerStrip": 180.00,
+    "retailPerBox": 1000.00,
+    "costPerTablet": 25.00
+  },
+  {
+    "name": "Clamoxin 375mg",
+    "brand": "Bosch Pharmaceuticals",
+    "formula": "Co-amoxiclav",
+    "category": "Antibiotic",
+    "stripsPerBox": 6,
+    "tabletsPerStrip": 6,
+    "retailPerTablet": 27.00,
+    "retailPerStrip": 162.00,
+    "retailPerBox": 900.00,
+    "costPerTablet": 22.00
+  },
+  {
+    "name": "Risek 40mg",
+    "brand": "Getz Pharma",
+    "formula": "Esomeprazole",
+    "category": "Gastroenterology",
+    "stripsPerBox": 2,
+    "tabletsPerStrip": 7,
+    "retailPerTablet": 40.00,
+    "retailPerStrip": 280.00,
+    "retailPerBox": 550.00,
+    "costPerTablet": 32.00
+  },
+  {
+    "name": "Nexum 40mg",
+    "brand": "GSK",
+    "formula": "Esomeprazole",
+    "category": "Gastroenterology",
+    "stripsPerBox": 2,
+    "tabletsPerStrip": 7,
+    "retailPerTablet": 44.00,
+    "retailPerStrip": 308.00,
+    "retailPerBox": 600.00,
+    "costPerTablet": 35.00
+  },
+  {
+    "name": "Esodax 40mg",
+    "brand": "Hilton Pharma",
+    "formula": "Esomeprazole",
+    "category": "Gastroenterology",
+    "stripsPerBox": 2,
+    "tabletsPerStrip": 7,
+    "retailPerTablet": 38.00,
+    "retailPerStrip": 266.00,
+    "retailPerBox": 500.00,
+    "costPerTablet": 30.00
+  },
+  {
+    "name": "Flagyl 400mg",
+    "brand": "Sanofi-Aventis",
+    "formula": "Metronidazole",
+    "category": "Antiprotozoal",
+    "stripsPerBox": 20,
+    "tabletsPerStrip": 10,
+    "retailPerTablet": 2.50,
+    "retailPerStrip": 25.00,
+    "retailPerBox": 450.00,
+    "costPerTablet": 2.00
+  },
+  {
+    "name": "Entamizole",
+    "brand": "Abbott Laboratories",
+    "formula": "Metronidazole / Diloxanide Furoate",
+    "category": "Antiprotozoal",
+    "stripsPerBox": 2,
+    "tabletsPerStrip": 10,
+    "retailPerTablet": 6.00,
+    "retailPerStrip": 60.00,
+    "retailPerBox": 110.00,
+    "costPerTablet": 4.80
+  },
+  {
+    "name": "Brufen 400mg",
+    "brand": "Abbott Laboratories",
+    "formula": "Ibuprofen",
+    "category": "Analgesic",
+    "stripsPerBox": 3,
+    "tabletsPerStrip": 10,
+    "retailPerTablet": 7.50,
+    "retailPerStrip": 75.00,
+    "retailPerBox": 220.00,
+    "costPerTablet": 6.00
+  },
+  {
+    "name": "Loprin 75mg",
+    "brand": "Searle Pakistan",
+    "formula": "Aspirin",
+    "category": "Cardiovascular",
+    "stripsPerBox": 3,
+    "tabletsPerStrip": 10,
+    "retailPerTablet": 1.60,
+    "retailPerStrip": 16.00,
+    "retailPerBox": 45.00,
+    "costPerTablet": 1.28
+  },
+  {
+    "name": "Ascard 75mg",
+    "brand": "Atco Laboratories",
+    "formula": "Aspirin",
+    "category": "Cardiovascular",
+    "stripsPerBox": 3,
+    "tabletsPerStrip": 10,
+    "retailPerTablet": 1.50,
+    "retailPerStrip": 15.00,
+    "retailPerBox": 42.00,
+    "costPerTablet": 1.20
+  },
+  {
+    "name": "Surbex-Z",
+    "brand": "Abbott Laboratories",
+    "formula": "Multivitamins",
+    "category": "Nutrition",
+    "stripsPerBox": 1,
+    "tabletsPerStrip": 30,
+    "retailPerTablet": 12.00,
+    "retailPerStrip": 360.00,
+    "retailPerBox": 360.00,
+    "costPerTablet": 9.60
+  },
+  {
+    "name": "Softin 10mg",
+    "brand": "Hilton Pharma",
+    "formula": "Loratadine",
+    "category": "Antihistamine",
+    "stripsPerBox": 1,
+    "tabletsPerStrip": 10,
+    "retailPerTablet": 12.00,
+    "retailPerStrip": 120.00,
+    "retailPerBox": 120.00,
+    "costPerTablet": 9.60
+  }
+];
+
+window.PAK_MEDICINE_DIRECTORY = PAK_MEDICINE_DIRECTORY;
