@@ -79,6 +79,251 @@ class PharmacyApp {
     this.simulatedCurrentDate = new Date("2026-06-29");
   }
 
+  getLangVal(val) {
+    if (!val) return '';
+    const lang = this.currentLanguage || 'ur';
+    if (typeof val === 'object') {
+      return val[lang] || val['ur'] || val['en'] || '';
+    }
+    const dict = {
+      ur: {
+        "Panadol 500mg": "پیناڈول 500 ملی گرام",
+        "Calpol 500mg": "کالپول 500 ملی گرام",
+        "Disprol 500mg": "ڈسپرول 500 ملی گرام",
+        "Febrol 500mg": "فیبرول 500 ملی گرام",
+        "Amoxil 250mg": "اموکسل 250 ملی گرام",
+        "Augmentin 375mg": "آگمنٹن 375 ملی گرام",
+        "Clamoxin 375mg": "کلیمکسن 375 ملی گرام",
+        "Risek 40mg": "رائزک 40 ملی گرام",
+        "Nexum 40mg": "نیکسم 40 ملی گرام",
+        "Esodax 40mg": "ایسوڈیکس 40 ملی گرام",
+        "Flagyl 400mg": "فلیجیل 400 ملی گرام",
+        "Entamizole": "اینٹامیزول",
+        "Brufen 400mg": "بروفن 400 ملی گرام",
+        "Loprin 75mg": "لوپرین 75 ملی گرام",
+        "Ascard 75mg": "اسکارڈ 75 ملی گرام",
+        "Surbex-Z": "سربیکس-زی",
+        "Softin 10mg": "سوفٹن 10 ملی گرام",
+        "Arinac Forte": "ایرینیک فورٹ",
+        "Zyrtec 10mg": "زیرٹیک 10 ملی گرام",
+        "Paracetamol": "پیراسیٹامول",
+        "Amoxicillin": "اموکسیسلن",
+        "Co-amoxiclav": "کو-اموکسیکلیو",
+        "Esomeprazole": "ایسومپرازول",
+        "Metronidazole": "میٹرونیڈازول",
+        "Metronidazole / Diloxanide Furoate": "میٹرونیڈازول / ڈیلوکسانائڈ فیوریٹ",
+        "Ibuprofen": "آئیبوپروفین",
+        "Aspirin": "ایسپرین",
+        "Multivitamins": "ملٹی وٹامنز",
+        "Loratadine": "لوریٹاڈین",
+        "Ibuprofen / Pseudoephedrine": "آئیبوپروفین / سوڈو ایفیڈرین",
+        "Cetirizine": "سیٹیریزین",
+        "GSK": "جی ایس کے (GSK)",
+        "Reckitt Benckiser": "ریکٹ بینکیزر",
+        "Abbott Laboratories": "ایبٹ لیبارٹریز",
+        "Bosch Pharmaceuticals": "بوش فارما",
+        "Getz Pharma": "گیٹز فارما",
+        "Hilton Pharma": "ہلٹن فارما",
+        "Sanofi-Aventis": "سانوفی",
+        "Searle Pakistan": "سرل پاکستان",
+        "Atco Laboratories": "اٹکو لیبارٹریز",
+        "Abbott": "ایبٹ",
+        "Analgesic": "درد کش / بخار",
+        "Antibiotic": "اینٹی بائیوٹک (Antibiotic)",
+        "Gastroenterology": "معدہ و جگر (Stomach)",
+        "Antiprotozoal": "پیٹ کے کیڑے / مروڑ",
+        "Cardiovascular": "امراضِ قلب (Heart)",
+        "Nutrition": "غذائی طاقت / وٹامنز",
+        "Antihistamine": "نزلہ و الرجی (Allergy)",
+        "Box": "ڈبی (Box)",
+        "Strip": "پتہ (Strip)",
+        "Tablet": "گولی (Tablet)",
+        "Walk-in Customer": "عام گاہک",
+        "Chronic Patient": "مستقل مریض",
+        "Doctor/Clinic": "ڈاکٹر / کلینک"
+      }
+    };
+    if (dict[lang] && dict[lang][val]) {
+      return dict[lang][val];
+    }
+    return val;
+  }
+
+  translateTerm(term) {
+    if (!term) return '';
+    const lang = this.currentLanguage || 'ur';
+    const dict = {
+      ur: {
+        "Sale": "فروخت (POS)",
+        "Sale (Credit)": "ادھار فروخت (کھاتہ)",
+        "Expense": "اخراجات",
+        "Supplier Payment": "سپلائر ادائیگی",
+        "Supplier Return": "سپلائر واپسی",
+        "Credit Payment Receipt": "ادھار وصولی",
+        "Cash-in-Hand": "کیش ان ہینڈ",
+        "Bank": "بینک اکاؤنٹ",
+        "Receivables": "ادھار وصولی کھاتہ",
+        "Cash": "نقد (Cash)",
+        "Card": "کارڈ / ڈیجیٹل",
+        "Khata": "کھاتہ (Credit)",
+        "Paid": "اداشدہ (Paid)",
+        "Unpaid": "غیر اداشدہ (Unpaid)",
+        "Partially Paid": "جزوی اداشدہ",
+        "Inflow": "کیش آمد",
+        "Outflow": "کیش اخراج",
+        "Electricity Bill": "بجلی کا بل",
+        "Rent": "دکان کا کرایہ",
+        "Salaries": "تنخواہیں",
+        "Refreshment": "ریفریشمنٹ",
+        "Other": "دیگر",
+        "دستیاب": "دستیاب",
+        "آؤٹ آف اسٹاک": "آؤٹ آف اسٹاک",
+        "کم اسٹاک الرٹ": "کم اسٹاک الرٹ",
+        "بیچز": "بیچز",
+        "ترمیم": "ترمیم",
+        "Rx (نسخہ لازمی)": "Rx (نسخہ لازمی)",
+        "خریداری (Debit)": "خریداری (Debit)",
+        "ادائیگی (Credit)": "ادائیگی (Credit)"
+      },
+      en: {
+        "Sale": "Sale (POS)",
+        "Sale (Credit)": "Credit Sale",
+        "Expense": "Expense",
+        "Supplier Payment": "Supplier Payment",
+        "Supplier Return": "Supplier Return",
+        "Credit Payment Receipt": "Khata Recovery",
+        "Cash-in-Hand": "Cash-in-Hand",
+        "Bank": "Bank Account",
+        "Receivables": "Receivables",
+        "Cash": "Cash",
+        "Card": "Card / Digital",
+        "Khata": "Khata (Credit)",
+        "Paid": "Paid",
+        "Unpaid": "Unpaid",
+        "Partially Paid": "Partially Paid",
+        "Inflow": "Inflow",
+        "Outflow": "Outflow",
+        "Electricity Bill": "Electricity Bill",
+        "Rent": "Rent",
+        "Salaries": "Salaries",
+        "Refreshment": "Refreshment",
+        "Other": "Other",
+        "دستیاب": "Available",
+        "آؤٹ آف اسٹاک": "Out of Stock",
+        "کم اسٹاک الرٹ": "Low Stock Alert",
+        "بیچز": "Batches",
+        "ترمیم": "Edit",
+        "Rx (نسخہ لازمی)": "Rx Required",
+        "خریداری (Debit)": "Purchase (Debit)",
+        "ادائیگی (Credit)": "Payment (Credit)"
+      }
+    };
+    if (dict[lang] && dict[lang][term]) {
+      return dict[lang][term];
+    }
+    return term;
+  }
+
+  translateStaticUI() {
+    const lang = this.currentLanguage;
+    const uiMap = {
+      // Sidebar Navigation
+      "ڈیش بورڈ": { en: "Dashboard", ur: "ڈیش بورڈ" },
+      "پوائنٹ آف سیل (POS)": { en: "Point of Sale (POS)", ur: "پوائنٹ آف سیل (POS)" },
+      "اسٹاک اور انوینٹری": { en: "Stock & Inventory", ur: "اسٹاک اور انوینٹری" },
+      "سپلائر اور خریداری": { en: "Suppliers & Purchases", ur: "سپلائر اور خریداری" },
+      "کسٹمر کھاتہ": { en: "Customer Khata", ur: "کسٹمر کھاتہ" },
+      "کیش لیجر (اکاؤنٹس)": { en: "Cash Ledger (Accounts)", ur: "کیش لیجر (اکاؤنٹس)" },
+      "ملازمین (Users)": { en: "Employees", ur: "ملازمین (Users)" },
+      "لاگ آؤٹ": { en: "Logout", ur: "لاگ آؤٹ" },
+      
+      // Dashboard
+      "آج کی کل سیل": { en: "Today's Total Sales", ur: "آج کی کل سیل" },
+      "آج کا خالص منافع": { en: "Today's Net Profit", ur: "آج کا خالص منافع" },
+      "ایکسپائرڈ ادویات": { en: "Expired Medicines", ur: "ایکسپائرڈ ادویات" },
+      "کم اسٹاک ادویات": { en: "Low Stock Items", ur: "کم اسٹاک ادویات" },
+      "ہفتہ وار سیل ہدف (Rs 10,000)": { en: "Weekly Sales Target (Rs 10,000)", ur: "ہفتہ وار سیل ہدف (Rs 10,000)" },
+      "حالیہ سیل ٹرانزیکشنز": { en: "Recent Sales Transactions", ur: "حالیہ سیل ٹرانزیکشنز" },
+      "قریبِ ایکسپائری الرٹس (90 دن)": { en: "Near-Expiry Alerts (90 Days)", ur: "قریبِ ایکسپائری الرٹس (90 دن)" },
+      
+      // POS
+      "بارکوڈ اسکین کریں (Simulate Scanner)": { en: "Scan Barcode (Sim Scanner)", ur: "بارکوڈ اسکین کریں (Simulate Scanner)" },
+      "فون سے تلاش کریں (Phone Search)": { en: "Search by Phone", ur: "فون سے تلاش کریں (Phone Search)" },
+      "رجسٹرڈ کسٹمر منتخب کریں": { en: "Select Registered Customer", ur: "رجسٹرڈ کسٹمر منتخب کریں" },
+      "کسٹمر کا نام": { en: "Customer Name", ur: "کسٹمر کا نام" },
+      "کسٹمر فون نمبر": { en: "Customer Phone", ur: "کسٹمر فون نمبر" },
+      "ذیلی ٹوٹل (Subtotal)": { en: "Subtotal", ur: "ذیلی ٹوٹل (Subtotal)" },
+      "سابقہ ادھار بقایا جات (Prev Balance)": { en: "Previous Outstanding", ur: "سابقہ ادھار بقایا جات (Prev Balance)" },
+      "خصوصی ڈسکاؤنٹ (Rs)": { en: "Special Discount (Rs)", ur: "خصوصی ڈسکاؤنٹ (Rs)" },
+      "سیلز ٹیکس (GST)": { en: "Sales Tax (GST)", ur: "سیلز ٹیکس (GST)" },
+      "ٹوٹل بل رقم (Grand Total)": { en: "Grand Total", ur: "ٹوٹل بل رقم (Grand Total)" },
+      "بل مکمل کریں (Checkout)": { en: "Complete Checkout", ur: "بل مکمل کریں (Checkout)" },
+      "کارٹ خالی کریں": { en: "Clear Cart", ur: "کارٹ خالی کریں" },
+      
+      // Inventory
+      "نیا اسٹاک شامل کریں": { en: "Add New Medicine", ur: "نیا اسٹاک شامل کریں" },
+      "اسٹاک امپورٹ (CSV)": { en: "Import Stock (CSV)", ur: "اسٹاک امپورٹ (CSV)" },
+      "دوا کا نام": { en: "Medicine Name", ur: "دوا کا نام" },
+      "فارمولا": { en: "Formula", ur: "فارمولا" },
+      "برانڈ / کیٹیگری": { en: "Brand / Category", ur: "برانڈ / کیٹیگری" },
+      "بارکوڈ": { en: "Barcode", ur: "بارکوڈ" },
+      "شیلف لوکیشن": { en: "Shelf Location", ur: "شیلف لوکیشن" },
+      "کل اسٹاک": { en: "Total Stock", ur: "کل اسٹاک" },
+      "اسٹیٹس": { en: "Status", ur: "اسٹیٹس" },
+      "بیچز": { en: "Batches", ur: "بیچز" },
+      "ایکشنز": { en: "Actions", ur: "ایکشنز" },
+      
+      // Expiry Returns
+      "ایکسپائری ریٹرن شیٹ (Upcoming Expiry Returns)": { en: "Upcoming Expiry Returns Sheet", ur: "ایکسپائری ریٹرن شیٹ (Upcoming Expiry Returns)" },
+      "بیچ نمبر": { en: "Batch Number", ur: "بیچ نمبر" },
+      "ایکسپائری ڈیٹ": { en: "Expiry Date", ur: "ایکسپائری ڈیٹ" },
+      "باقی دن": { en: "Days Left", ur: "باقی دن" },
+      "مقدار": { en: "Quantity", ur: "مقدار" },
+      "خریداری مالیت": { en: "Purchase Cost", ur: "خریداری مالیت" },
+      "سپلائر": { en: "Supplier", ur: "سپلائر" },
+      
+      // Suppliers
+      "نیا سپلائر رجسٹر کریں": { en: "Register New Supplier", ur: "نیا سپلائر رجسٹر کریں" },
+      "بقایاجات ادائیگی کریں": { en: "Pay Supplier Balance", ur: "بقایاجات ادائیگی کریں" },
+      "نئی اسٹاک خریداری درج کریں": { en: "Record New Purchase", ur: "نئی اسٹاک خریداری درج کریں" },
+      "سپلائر کمپنی": { en: "Supplier Company", ur: "سپلائر کمپنی" },
+      "رابطہ کار": { en: "Contact Person", ur: "رابطہ کار" },
+      "فون نمبر": { en: "Phone Number", ur: "فون نمبر" },
+      "پتہ": { en: "Address", ur: "پتہ" },
+      "کل واجب الادا رقم": { en: "Outstanding Balance", ur: "کل واجب الادا رقم" },
+      
+      // Khata
+      "نیا گاہک رجسٹر کریں": { en: "Register New Customer", ur: "نیا گاہک رجسٹر کریں" },
+      "ادھار وصولی جمع کریں": { en: "Receive Khata Payment", ur: "ادھار وصولی جمع کریں" },
+      "گاہک تفصیل": { en: "Customer Details", ur: "گاہک تفصیل" },
+      "کیٹیگری": { en: "Category", ur: "کیٹیگری" },
+      "موجودہ ادھار": { en: "Current Outstanding", ur: "موجودہ ادھار" },
+      "کریڈٹ حد (Limit)": { en: "Credit Limit", ur: "کریڈٹ حد (Limit)" },
+      
+      // Ledger
+      "اخراجات درج کریں (Record Expense)": { en: "Record Expense", ur: "اخراجات درج کریں (Record Expense)" },
+      "کیش ان ہینڈ (Cash)": { en: "Cash-in-Hand", ur: "کیش ان ہینڈ (Cash)" },
+      "بینک بیلنس (Bank)": { en: "Bank Balance", ur: "بینک بیلنس (Bank)" },
+      "کل مالیاتی اثاثے": { en: "Total Financial Assets", ur: "کل مالیاتی اثاثے" },
+      "تاریخ و وقت": { en: "Timestamp", ur: "تاریخ و وقت" },
+      "قسم": { en: "Type", ur: "قسم" },
+      "تفصیل": { en: "Description", ur: "تفصیل" },
+      "اکاؤنٹ": { en: "Account", ur: "اکاؤنٹ" },
+      "رقم": { en: "Amount", ur: "رقم" },
+      "ملازم": { en: "Performed By", ur: "ملازم" }
+    };
+
+    const selectors = 'button, label, th, h3, h4, span, p, .panel-title, .nav-item span';
+    document.querySelectorAll(selectors).forEach(el => {
+      if (el.children.length === 0) {
+        const text = el.innerText.trim();
+        if (uiMap[text]) {
+          el.innerText = uiMap[text][lang];
+        }
+      }
+    });
+  }
+
   init() {
     this.loadFromDB();
     this.setLanguage(this.currentLanguage);
@@ -146,6 +391,9 @@ class PharmacyApp {
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
       document.getElementById('header-date').innerText = d.toLocaleDateString('en-US', options);
     }
+
+    this.translateStaticUI();
+    this.renderAllViews();
   }
 
   loadFromDB() {
@@ -538,17 +786,23 @@ class PharmacyApp {
       if (isOutOfStock) stockColor = 'var(--danger)';
       else if (totalStock <= med.reorderLevel) stockColor = 'var(--warning)';
 
+      const displayName = this.getLangVal(med.name);
+      const displayFormula = this.getLangVal(med.formula);
+      const displayStock = this.currentLanguage === 'ur' ? `اسٹاک: ${totalStock} گولیاں` : `Stock: ${totalStock} Tabs`;
+      const displayPriceUnit = this.currentLanguage === 'ur' ? 'گولی' : 'Tab';
+      const btnSub = this.currentLanguage === 'ur' ? 'متبادل' : 'Substitute';
+
       html += `
         <div class="catalog-item-card" style="opacity: ${isOutOfStock ? '0.6' : '1'};">
           <div onclick="app.addToCart('${med.medicineId}')" style="cursor: pointer; flex-grow: 1;">
-            <div class="catalog-item-name">${med.name}</div>
-            <div class="catalog-item-formula" style="font-size:0.75rem; color: var(--text-muted);">${med.formula}</div>
-            <div class="catalog-item-stock" style="color: ${stockColor}; margin-top: 4px;">اسٹاک: ${totalStock} Tabs</div>
+            <div class="catalog-item-name">${displayName}</div>
+            <div class="catalog-item-formula" style="font-size:0.75rem; color: var(--text-muted);">${displayFormula}</div>
+            <div class="catalog-item-stock" style="color: ${stockColor}; margin-top: 4px;">${displayStock}</div>
           </div>
           <div class="catalog-item-bottom" style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="catalog-item-price" style="font-weight:700; color:var(--primary)">Rs ${standardPrice.toFixed(2)}/Tab</span>
+            <span class="catalog-item-price" style="font-weight:700; color:var(--primary)">Rs ${standardPrice.toFixed(2)}/${displayPriceUnit}</span>
             <div style="display:flex; gap: 4px;">
-              <button class="btn btn-secondary" style="padding: 2px 6px; font-size:0.7rem;" onclick="app.openSubstitutesModal('${med.medicineId}')" title="متبادل تلاش کریں">متبادل</button>
+              <button class="btn btn-secondary" style="padding: 2px 6px; font-size:0.7rem;" onclick="app.openSubstitutesModal('${med.medicineId}')" title="متبادل تلاش کریں">${btnSub}</button>
               ${med.prescriptionRequired ? '<span class="badge badge-danger" style="font-size:0.6rem; padding: 2px 4px;">Rx</span>' : ''}
             </div>
           </div>
@@ -556,9 +810,10 @@ class PharmacyApp {
       `;
     });
 
+    const noMatchesText = this.currentLanguage === 'ur' ? 'کوئی دوا میچ نہیں ہوئی' : 'No medicines matched';
     document.getElementById('pos-catalog-grid').innerHTML = html || `
       <div style="grid-column: span 3; text-align: center; color: var(--text-muted); padding: 40px 0;">
-        کوئی دوا میچ نہیں ہوئی
+        ${noMatchesText}
       </div>
     `;
   }
@@ -567,32 +822,39 @@ class PharmacyApp {
     const med = this.inventory.find(m => m.medicineId === medId);
     if (!med) return;
 
-    document.getElementById('substitute-formula-name').innerText = med.formula;
+    document.getElementById('substitute-formula-name').innerText = this.getLangVal(med.formula);
     
     const tbody = document.getElementById('substitute-list-tbody');
     let html = '';
     const shownBrandNames = new Set();
+    const isUrdu = this.currentLanguage === 'ur';
 
     // 1. List matching brands from our actual inventory first
     const inventoryMatches = this.inventory.filter(
-      m => m.formula.toLowerCase().trim() === med.formula.toLowerCase().trim()
+      m => this.getLangVal(m.formula).toLowerCase().trim() === this.getLangVal(med.formula).toLowerCase().trim()
     );
 
     inventoryMatches.forEach(s => {
-      shownBrandNames.add(s.name.toLowerCase().trim());
+      const displayName = this.getLangVal(s.name);
+      shownBrandNames.add(displayName.toLowerCase().trim());
       const stock = s.batches.reduce((sum, b) => sum + b.quantity, 0);
       const retail = s.pricing ? s.pricing.retailPerTablet : (s.batches.length > 0 ? s.batches[0].retailPrice : 0);
       
+      const displayBrand = this.getLangVal(s.brand);
+      const displayCat = this.getLangVal(s.category);
+      const displayStock = isUrdu ? `${stock} گولیاں` : `${stock} Tabs`;
+      const btnText = isUrdu ? 'کارٹ میں لائیں' : 'Bring to Cart';
+
       html += `
         <tr>
-          <td><strong>${s.name}</strong></td>
-          <td>${s.brand} / ${s.category}</td>
+          <td><strong>${displayName}</strong></td>
+          <td>${displayBrand} / ${displayCat}</td>
           <td>Rs ${retail.toFixed(2)}</td>
-          <td><strong style="color: ${stock<=s.reorderLevel ? 'var(--warning)' : 'inherit'}">${stock} Tabs</strong></td>
+          <td><strong style="color: ${stock<=s.reorderLevel ? 'var(--warning)' : 'inherit'}">${displayStock}</strong></td>
           <td>${s.rackLocation || 'Shelf'}</td>
           <td>
             <button class="btn btn-primary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="app.closeModal('modal-substitute'); app.addToCart('${s.medicineId}')">
-              کارٹ میں لائیں
+              ${btnText}
             </button>
           </td>
         </tr>
@@ -601,12 +863,13 @@ class PharmacyApp {
 
     // 2. List matching brands from the master directory that are not in our inventory
     const dirMatches = (window.PAK_MEDICINE_DIRECTORY || []).filter(
-      d => d.formula.toLowerCase().trim() === med.formula.toLowerCase().trim()
+      d => this.getLangVal(d.formula).toLowerCase().trim() === this.getLangVal(med.formula).toLowerCase().trim()
     );
 
     dirMatches.forEach(s => {
-      if (!shownBrandNames.has(s.name.toLowerCase().trim())) {
-        shownBrandNames.add(s.name.toLowerCase().trim());
+      const displayName = this.getLangVal(s.name);
+      if (!shownBrandNames.has(displayName.toLowerCase().trim())) {
+        shownBrandNames.add(displayName.toLowerCase().trim());
         
         // Escape strings for inline JS call safely
         const escName = s.name.replace(/'/g, "\\'");
@@ -614,16 +877,22 @@ class PharmacyApp {
         const escCat = s.category.replace(/'/g, "\\'");
         const escBrand = s.brand.replace(/'/g, "\\'");
 
+        const displayBrand = this.getLangVal(s.brand);
+        const displayCat = this.getLangVal(s.category);
+        const dirLabel = isUrdu ? 'ڈائریکٹری' : 'Directory';
+        const displayStock = isUrdu ? '0 گولیاں (دستیاب نہیں)' : '0 Tabs (Not Available)';
+        const btnText = isUrdu ? 'اسٹاک میں لائیں' : 'Bring to Stock';
+
         html += `
           <tr style="opacity: 0.85; background: rgba(14, 165, 233, 0.02);">
-            <td><strong>${s.name}</strong> <span style="font-size:0.7rem; color:var(--text-muted);">(ڈائریکٹری)</span></td>
-            <td>${s.brand} / ${s.category}</td>
+            <td><strong>${displayName}</strong> <span style="font-size:0.7rem; color:var(--text-muted);">(${dirLabel})</span></td>
+            <td>${displayBrand} / ${displayCat}</td>
             <td>Rs ${s.retailPerTablet.toFixed(2)}</td>
-            <td><span class="badge badge-danger">0 Tabs (دستیاب نہیں)</span></td>
+            <td><span class="badge badge-danger">${displayStock}</span></td>
             <td>N/A</td>
             <td>
               <button class="btn btn-success" style="padding: 4px 8px; font-size: 0.75rem;" onclick="app.bringToStock('${escName}', '${escFormula}', '${escCat}', '${escBrand}', ${s.stripsPerBox}, ${s.tabletsPerStrip}, ${s.retailPerTablet}, ${s.costPerTablet})">
-                اسٹاک میں لائیں
+                ${btnText}
               </button>
             </td>
           </tr>
@@ -631,9 +900,13 @@ class PharmacyApp {
       }
     });
 
+    const noMatchesText = isUrdu 
+      ? 'اس فارمولے کی متبادل کوئی دوسری دوا انوینٹری یا ڈائریکٹری میں موجود نہیں ہے' 
+      : 'No substitutes found in inventory or directory for this formula';
+
     tbody.innerHTML = html || `
       <tr>
-        <td colspan="6" style="text-align: center; color: var(--text-muted);">اس فارمولے کی متبادل کوئی دوسری دوا انوینٹری یا ڈائریکٹری میں موجود نہیں ہے</td>
+        <td colspan="6" style="text-align: center; color: var(--text-muted);">${noMatchesText}</td>
       </tr>
     `;
 
@@ -772,11 +1045,14 @@ class PharmacyApp {
 
   renderCart() {
     const container = document.getElementById('pos-cart-items');
+    const isUrdu = this.currentLanguage === 'ur';
+
     if (this.cart.length === 0) {
+      const emptyMsg = isUrdu ? 'کارٹ خالی ہے۔ دوا شامل کرنے کے لیے بائیں جانب کلک کریں۔' : 'Cart is empty. Click items on the left to add.';
       container.innerHTML = `
         <div style="text-align: center; color: var(--text-muted); margin-top: 100px;">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="margin-bottom: 12px;"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-          <p>کارٹ خالی ہے۔ دوا شامل کرنے کے لیے بائیں جانب کلک کریں۔</p>
+          <p>${emptyMsg}</p>
         </div>
       `;
       this.calculateCartTotals();
@@ -786,16 +1062,22 @@ class PharmacyApp {
     let html = '';
     this.cart.forEach(item => {
       const subtotal = item.quantity * item.unitPrice;
+      const displayName = this.getLangVal(item.name);
+      
+      const optTablet = isUrdu ? 'Tablet (گولی)' : 'Tablet';
+      const optStrip = isUrdu ? 'Strip (پتہ)' : 'Strip';
+      const optBox = isUrdu ? 'Box (ڈبی)' : 'Box';
+
       html += `
         <div class="cart-item-row">
           <div class="cart-item-details">
-            <span class="cart-item-name">${item.name}</span>
+            <span class="cart-item-name">${displayName}</span>
             <div style="display:flex; align-items:center; gap: 8px; margin-top: 4px;">
               <span class="cart-item-meta">Rs ${item.unitPrice.toFixed(2)} / </span>
               <select class="form-control" style="width: auto; padding: 2px 4px; font-size: 0.75rem; background: var(--bg-card-hover); height: auto; margin:0;" onchange="app.changeCartUnit('${item.medicineId}', this.value)">
-                <option value="Tablet" ${item.unit==='Tablet'?'selected':''}>Tablet (گولی)</option>
-                <option value="Strip" ${item.unit==='Strip'?'selected':''}>Strip (پتہ)</option>
-                <option value="Box" ${item.unit==='Box'?'selected':''}>Box (ڈبی)</option>
+                <option value="Tablet" ${item.unit==='Tablet'?'selected':''}>${optTablet}</option>
+                <option value="Strip" ${item.unit==='Strip'?'selected':''}>${optStrip}</option>
+                <option value="Box" ${item.unit==='Box'?'selected':''}>${optBox}</option>
               </select>
             </div>
           </div>
@@ -1273,6 +1555,7 @@ class PharmacyApp {
   renderInventory() {
     const tbody = document.getElementById('inventory-list-tbody');
     let html = '';
+    const isUrdu = this.currentLanguage === 'ur';
 
     this.inventory.forEach(med => {
       const totalStock = med.batches.reduce((sum, b) => sum + b.quantity, 0);
@@ -1287,33 +1570,45 @@ class PharmacyApp {
         statusText = 'کم اسٹاک الرٹ';
       }
 
+      const displayName = this.getLangVal(med.name);
+      const displayFormula = this.getLangVal(med.formula);
+      const displayBrand = this.getLangVal(med.brand);
+      const displayCategory = this.getLangVal(med.category);
+      const displayStatus = this.translateTerm(statusText);
+      const rxLabel = isUrdu ? 'Rx (نسخہ لازمی)' : 'Rx Required';
+      const batchLabel = isUrdu ? `${med.batches.length} بیچز` : `${med.batches.length} Batches`;
+      const btnBatch = isUrdu ? 'بیچز' : 'Batches';
+      const btnEdit = isUrdu ? 'ترمیم' : 'Edit';
+      const unitLabel = isUrdu ? 'گولیاں' : 'Tabs';
+
       html += `
         <tr>
           <td>
-            <div style="font-weight: 600;">${med.name}</div>
-            ${med.prescriptionRequired ? '<span class="badge badge-danger" style="font-size:0.65rem; padding: 2px 6px;">Rx (نسخہ لازمی)</span>' : ''}
+            <div style="font-weight: 600;">${displayName}</div>
+            ${med.prescriptionRequired ? `<span class="badge badge-danger" style="font-size:0.65rem; padding: 2px 6px;">${rxLabel}</span>` : ''}
           </td>
-          <td style="color: var(--text-muted); font-size: 0.85rem;">${med.formula}</td>
+          <td style="color: var(--text-muted); font-size: 0.85rem;">${displayFormula}</td>
           <td>
-            <div>${med.brand}</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">${med.category}</div>
+            <div>${displayBrand}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">${displayCategory}</div>
           </td>
           <td><code>${med.barcode || 'N/A'}</code></td>
           <td>${med.rackLocation || 'Shelf 1'}</td>
-          <td><strong style="font-size: 1.05rem;">${totalStock} Tabs</strong></td>
-          <td><span class="badge ${badgeClass}">${statusText}</span></td>
-          <td>${med.batches.length} بیچز</td>
+          <td><strong style="font-size: 1.05rem;">${totalStock} ${unitLabel}</strong></td>
+          <td><span class="badge ${badgeClass}">${displayStatus}</span></td>
+          <td>${batchLabel}</td>
           <td>
-            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="app.openBatchesModal('${med.medicineId}')">بیچز</button>
-            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="app.openEditMedicineModal('${med.medicineId}')">ترمیم</button>
+            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="app.openBatchesModal('${med.medicineId}')">${btnBatch}</button>
+            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="app.openEditMedicineModal('${med.medicineId}')">${btnEdit}</button>
           </td>
         </tr>
       `;
     });
 
+    const emptyText = isUrdu ? 'کوئی ادویات موجود نہیں ہیں' : 'No medicines in inventory';
     tbody.innerHTML = html || `
       <tr>
-        <td colspan="9" style="text-align: center; color: var(--text-muted);">کوئی ادویات موجود نہیں ہیں</td>
+        <td colspan="9" style="text-align: center; color: var(--text-muted);">${emptyText}</td>
       </tr>
     `;
 
@@ -2444,26 +2739,31 @@ class PharmacyApp {
         else if (isBank) bankOutflow += l.amount;
       }
 
+      const displayType = inFlow ? this.translateTerm('Inflow') : this.translateTerm('Outflow');
+      const displayCategory = this.translateTerm(l.category);
+      const displayAccount = this.translateTerm(l.account || 'Receivables');
+
       html += `
         <tr>
           <td>${dateStr}</td>
           <td>
             <span class="badge ${inFlow ? 'badge-success' : 'badge-danger'}">
-              ${inFlow ? 'کیش آمد (Inflow)' : 'کیش اخراج (Outflow)'}
+              ${displayType}
             </span>
           </td>
-          <td>${l.category}</td>
+          <td>${displayCategory}</td>
           <td><strong style="color: ${inFlow ? 'var(--primary)' : 'var(--danger)'}">Rs ${l.amount.toFixed(2)}</strong></td>
-          <td><span class="badge badge-secondary" style="font-size:0.75rem;">${l.account || 'Receivables'}</span></td>
+          <td><span class="badge badge-secondary" style="font-size:0.75rem;">${displayAccount}</span></td>
           <td style="font-size:0.85rem;">${l.description}</td>
           <td>${l.performedBy}</td>
         </tr>
       `;
     });
 
+    const emptyText = this.currentLanguage === 'ur' ? 'کوئی کھاتہ ہسٹری موجود نہیں ہے' : 'No account ledger records found';
     tbody.innerHTML = html || `
       <tr>
-        <td colspan="7" style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">کوئی کھاتہ ہسٹری موجود نہیں ہے</td>
+        <td colspan="7" style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">${emptyText}</td>
       </tr>
     `;
 
