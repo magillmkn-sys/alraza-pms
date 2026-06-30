@@ -1,4 +1,4 @@
-// Pharmacy Management System - Main JS Logic (Updated with Exports, Stock Import Admin Approval, WhatsApp Sharing & Dynamic Expense Categories)
+// Pharmacy Management System - Main JS Logic (Updated with Optional Tax, Phone Search & PDF Download)
 // Current System Date simulation: 2026-06-29
 
 const TRANSLATIONS = {
@@ -213,7 +213,6 @@ class PharmacyApp {
     document.getElementById('nav-user-role').innerText = this.translateRole(this.currentUser.role);
     document.getElementById('nav-user-avatar').innerText = this.currentUser.name.charAt(0).toUpperCase();
 
-    // Show dynamic Admin panels
     const expenseCatManager = document.getElementById('admin-expense-cat-manager');
     if (expenseCatManager) {
       expenseCatManager.style.display = this.currentUser.role === 'Admin' ? 'flex' : 'none';
@@ -451,6 +450,20 @@ class PharmacyApp {
       options += `<option value="${c.customerId}">${c.name} [${c.category}]${warningText}</option>`;
     });
     select.innerHTML = options;
+  }
+
+  searchCustomerByPhone() {
+    const query = document.getElementById('pos-customer-search-phone').value.trim();
+    const select = document.getElementById('pos-customer-select');
+    
+    if (!query) return;
+
+    // Find customer whose phone contains the query
+    const match = this.customers.find(c => c.phone.replace(/[\s-+]/g, '').includes(query));
+    if (match) {
+      select.value = match.customerId;
+      this.handlePOSCustomerSelect();
+    }
   }
 
   handlePOSCustomerSelect() {
@@ -696,6 +709,7 @@ class PharmacyApp {
     document.getElementById('pos-discount-input').value = 0;
     const prevBalLabel = document.getElementById('pos-summary-prev-balance');
     if (prevBalLabel) prevBalLabel.innerText = 'Rs 0.00';
+    document.getElementById('pos-customer-search-phone').value = '';
   }
 
   renderCart() {
@@ -769,13 +783,23 @@ class PharmacyApp {
     if (discount > subtotal) discount = subtotal;
 
     const taxableAmount = subtotal - discount;
-    const tax = taxableAmount * 0.15;
+    
+    // Optional Sales Tax logic and dynamic percentage input
+    const taxToggle = document.getElementById('pos-tax-toggle');
+    const taxPercentInput = document.getElementById('pos-tax-percent-input');
+    
+    let taxPercent = 0;
+    if (taxToggle && taxToggle.checked) {
+      taxPercent = parseFloat(taxPercentInput.value) || 0;
+    }
+    
+    const tax = taxableAmount * (taxPercent / 100);
     const grandTotal = taxableAmount + tax;
 
     document.getElementById('pos-summary-subtotal').innerText = `Rs ${subtotal.toFixed(2)}`;
     document.getElementById('pos-summary-total').innerText = `Rs ${grandTotal.toFixed(2)}`;
     
-    return { subtotal, discount, tax, grandTotal };
+    return { subtotal, discount, tax, taxPercent, grandTotal };
   }
 
   simScanner() {
@@ -927,6 +951,7 @@ class PharmacyApp {
         subtotal: totals.subtotal,
         discount: totals.discount,
         tax: totals.tax,
+        taxPercent: totals.taxPercent,
         grandTotal: totals.grandTotal,
         totalCost: totalCost,
         netProfit: totals.grandTotal - totalCost - totals.tax
@@ -998,12 +1023,30 @@ class PharmacyApp {
     this.showToast('بل کامیابی سے درج ہو چکا ہے!', 'success');
     this.closeModal('modal-checkout');
     
-    // Open post-checkout complete actions (WhatsApp sharing)
     document.getElementById('completed-sale-wa-number').value = customerPhone ? customerPhone.replace(/[\s-+]/g, '') : '';
     this.openModal('modal-sale-complete');
 
     this.clearCart();
     this.renderAllViews();
+  }
+
+  downloadReceiptPDF() {
+    if (!this.lastSale) return;
+
+    // Trigger html2pdf convert on receipt-to-print element
+    const element = document.getElementById('receipt-to-print');
+    
+    const opt = {
+      margin:       0.2,
+      filename:     `Invoice-${this.lastSale.invoiceNumber}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    // run conversion
+    html2pdf().set(opt).from(element).save();
+    this.showToast('پی ڈی ایف بل ڈاؤن لوڈنگ شروع ہو گئی ہے!', 'success');
   }
 
   sendReceiptViaWhatsApp() {
@@ -1015,7 +1058,6 @@ class PharmacyApp {
       return;
     }
 
-    // Clean and validate Pakistani number format
     phone = phone.replace(/[\s-+]/g, '');
     if (phone.startsWith('0')) {
       phone = '92' + phone.substring(1);
@@ -1131,7 +1173,7 @@ class PharmacyApp {
         <span>Rs ${sale.totals.discount.toFixed(2)}</span>
       </div>
       <div class="receipt-row">
-        <span>سیلز ٹیکس (15% GST):</span>
+        <span>سیلز ٹیکس (${sale.totals.taxPercent || 0}% GST):</span>
         <span>Rs ${sale.totals.tax.toFixed(2)}</span>
       </div>
       <div class="receipt-row" style="font-size:14px; font-weight:bold;">
@@ -1252,7 +1294,7 @@ class PharmacyApp {
 
     lines.forEach((line, index) => {
       const parts = line.split(',');
-      if (parts.length >= 10 && index > 0) { // Skip headers
+      if (parts.length >= 10 && index > 0) {
         parsed.push({
           name: parts[0]?.trim(),
           formula: parts[1]?.trim(),
@@ -1275,7 +1317,6 @@ class PharmacyApp {
       return;
     }
 
-    // Queue for approval
     this.pendingImports = parsed;
     this.saveToDB('pending_imports', this.pendingImports);
     
@@ -1294,7 +1335,6 @@ class PharmacyApp {
     const panel = document.getElementById('pending-imports-approval-panel');
     const tbody = document.getElementById('pending-imports-tbody');
 
-    // Only Admin can see/approve the pending approvals panel
     if (this.currentUser.role === 'Admin' && this.pendingImports.length > 0) {
       panel.style.display = 'block';
       let html = '';
@@ -1329,7 +1369,6 @@ class PharmacyApp {
         let med = this.inventory.find(m => m.name.toLowerCase().trim() === item.name.toLowerCase().trim());
         
         if (!med) {
-          // Register new medicine
           med = {
             medicineId: `med_${Date.now()}_${Math.floor(Math.random()*1000)}`,
             name: item.name,
@@ -1358,7 +1397,6 @@ class PharmacyApp {
           this.inventory.push(med);
         }
 
-        // Add the batch
         med.batches.push({
           batchNumber: item.batchNumber,
           purchasePrice: item.purchasePrice,
@@ -2173,7 +2211,7 @@ class PharmacyApp {
 
   updateOutstandingBalanceLabel() {
     const supId = document.getElementById('pay-supplier-select').value;
-    const s = this.suppliers.find(x => x.supplierId === supId);
+    const s = this.suppliers.find(x => x.outstandingBalance === supId);
     const balance = s ? s.outstandingBalance : 0;
     document.getElementById('outstanding-balance-label').innerText = `موجودہ کل بقایا جات: Rs ${balance.toFixed(2)}`;
   }
@@ -2367,7 +2405,7 @@ class PharmacyApp {
 
     tbody.innerHTML = html || `
       <tr>
-        <td colspan="7" style="text-align: center; color: var(--text-muted);">کوئی کھاتہ ہسٹری موجود نہیں ہے</td>
+        <td colspan="7" style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">کوئی کھاتہ ہسٹری موجود نہیں ہے</td>
       </tr>
     `;
 
@@ -2381,7 +2419,6 @@ class PharmacyApp {
     this.compileTaxProfitReport();
   }
 
-  // --- Dynamic Expense Categories ---
   populateExpenseCategoriesDropdown() {
     const select = document.getElementById('exp-category');
     if (!select) return;
@@ -2419,7 +2456,6 @@ class PharmacyApp {
     this.populateExpenseCategoriesDropdown();
   }
 
-  // --- Export Ledger Data (CSV, Excel, PDF) ---
   exportLedger(format) {
     if (this.ledger.length === 0) {
       this.showToast('لیجر میں کوئی ڈیٹا موجود نہیں ہے!', 'warning');
@@ -2427,7 +2463,6 @@ class PharmacyApp {
     }
 
     if (format === 'pdf') {
-      // Styled print view window
       const printWindow = window.open('', '_blank');
       let rowsHtml = '';
       this.ledger.forEach(l => {
@@ -2485,10 +2520,9 @@ class PharmacyApp {
       return;
     }
 
-    // CSV and Excel Export
     let csvContent = 'Timestamp,Type,Category,Amount,Account,Description,Performed By\n';
     this.ledger.forEach(l => {
-      const desc = l.description.replace(/,/g, ' '); // Clean commas
+      const desc = l.description.replace(/,/g, ' ');
       csvContent += `"${new Date(l.timestamp).toLocaleString()}","${l.type}","${l.category}",${l.amount},"${l.account || 'Receivables'}","${desc}","${l.performedBy}"\n`;
     });
 

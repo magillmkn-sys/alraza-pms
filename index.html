@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>فارمیسی مینجمنٹ سسٹم - Pharmacy Management System</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body class="rtl">
 
@@ -301,11 +302,17 @@
 
               <!-- POS billing forms and total summary -->
               <div class="pos-cart-summary">
-                <div style="margin-bottom: 8px;">
-                  <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px;">رجسٹرڈ کسٹمر منتخب کریں (کھاتہ دار)</label>
-                  <select id="pos-customer-select" class="form-control" style="padding: 6px 10px;" onchange="app.handlePOSCustomerSelect()">
-                    <!-- Populated by JS -->
-                  </select>
+                <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 10px; margin-bottom: 8px;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 2px;">فون سے تلاش کریں (Phone Search)</label>
+                    <input type="text" id="pos-customer-search-phone" class="form-control" placeholder="0300..." style="padding: 6px 10px;" oninput="app.searchCustomerByPhone()">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 2px;">رجسٹرڈ کسٹمر منتخب کریں</label>
+                    <select id="pos-customer-select" class="form-control" style="padding: 6px 10px;" onchange="app.handlePOSCustomerSelect()">
+                      <!-- Populated by JS -->
+                    </select>
+                  </div>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                   <div class="form-group" style="margin-bottom: 0;">
@@ -329,6 +336,16 @@
                 <div class="summary-row">
                   <span>خصوصی ڈسکاؤنٹ (Rs)</span>
                   <input type="number" id="pos-discount-input" value="0" class="form-control" style="width: 80px; padding: 2px 6px; text-align: center; margin: 0;" oninput="app.calculateCartTotals()">
+                </div>
+                <div class="summary-row" style="align-items: center;">
+                  <span style="display: flex; align-items: center; gap: 4px;">
+                    <input type="checkbox" id="pos-tax-toggle" checked onchange="app.calculateCartTotals()" style="width: 16px; height: 16px; margin: 0; cursor: pointer;">
+                    <label for="pos-tax-toggle" style="margin: 0; cursor: pointer; font-size: 0.85rem; font-weight: 500;">سیلز ٹیکس (GST)</label>
+                  </span>
+                  <span style="display: flex; align-items: center; gap: 4px;">
+                    <input type="number" id="pos-tax-percent-input" value="15" min="0" max="100" class="form-control" style="width: 50px; padding: 2px 4px; text-align: center; margin: 0; height: auto;" oninput="app.calculateCartTotals()">
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">%</span>
+                  </span>
                 </div>
                 <div class="summary-row total">
                   <span>ٹوٹل بل رقم (Grand Total)</span>
@@ -1294,6 +1311,9 @@
         </div>
         <button class="btn btn-success" style="width: 100%; justify-content: center; margin-bottom: 10px;" onclick="app.sendReceiptViaWhatsApp()">
           WhatsApp رسید بھیجیں
+        </button>
+        <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-bottom: 10px; background: var(--secondary); border-color: var(--secondary);" onclick="app.downloadReceiptPDF()">
+          پی ڈی ایف بل ڈاؤن لوڈ کریں (Download PDF)
         </button>
         <button class="btn btn-secondary" style="width: 100%; justify-content: center;" onclick="app.closeModal('modal-sale-complete')">
           بند کریں (Close)
